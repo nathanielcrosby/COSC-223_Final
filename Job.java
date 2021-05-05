@@ -3,19 +3,23 @@ import java.util.Queue;
 
 public class Job {
     private int arrivalTime;
-    private int size;
+    private int sizes[];
     private int departureTime;
     private int waitUtility;
     private int foodUtility;
     private int[] preferences;
 
-    public Job(int arrivalTime, int size) {
+    public Job(int arrivalTime, int jobSize, int servers) {
         this.arrivalTime = arrivalTime;
-        this.size = size;
+        sizes = new int[servers];
+        this.sizes[0] = jobSize;
     }
 
-    public int getSize() {
-        return size;
+    public int getSizes(int index) {
+        return sizes[index];
+    }
+    public void setSizes(int size, int index) {
+        sizes[index] = size;
     }
 
     public int getArrivalTime() {
@@ -29,7 +33,7 @@ public class Job {
     public void setDepartureTime(int departureTime) {
         this.departureTime = departureTime;
     }
-
+/*
     public int getWaitUtility(){
         return this.waitUtility;
     }
@@ -73,6 +77,5 @@ public class Job {
 
         }
 
-
-    }
+    }*/
 }
