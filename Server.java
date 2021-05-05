@@ -1,3 +1,4 @@
+
 import java.util.AbstractQueue;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -8,12 +9,20 @@ public class Server {
     private int nextDepartureTime = Integer.MAX_VALUE;
     private int currTime;
     private int numjobs = 0;
+    private int food;
+    private int itemsCapacity;
+    private int itemsLeft;
 
     public Server() {
         jobs = new LinkedList<Job>();
     }
 
     public void addJob(Job job) {
+        if (itemsLeft == 0){
+            currTime += 10;
+            itemsLeft = itemsCapacity;
+        }
+
         numjobs++;
         currTime = job.getArrivalTime();
         if(currentJob == null) {
@@ -34,10 +43,16 @@ public class Server {
         } else {
             nextDepartureTime = Integer.MAX_VALUE;
         }
+        itemsLeft --;
     }
 
     public void setCurrentJob(Job job) {
         currentJob = job;
+    }
+
+    public void setItemsLeft(int left){
+        itemsCapacity = left;
+        itemsLeft = left;
     }
 
     public Job getCurrentJob() {
@@ -53,6 +68,10 @@ public class Server {
 
     public int getNextDepartureTime() {
         return nextDepartureTime;
+    }
+
+    public int getFood() {
+        return food;
     }
 
 }
