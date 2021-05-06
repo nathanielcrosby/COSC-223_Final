@@ -12,8 +12,10 @@ public class Server {
     private int food;
     private int itemsCapacity;
     private int itemsLeft;
+    private int index;
 
-    public Server() {
+    public Server(int index) {
+        this.index = index;
         jobs = new LinkedList<Job>();
     }
 
@@ -27,23 +29,26 @@ public class Server {
         currTime = job.getArrivalTime();
         if(currentJob == null) {
             setCurrentJob(job);
-            nextDepartureTime = currTime + job.getSize();
+            nextDepartureTime = currTime + job.getSizes(index);
         } else {
             jobs.add(job);
         }
     }
 
-    public void departure() {
+    public Job departure() {
         numjobs--;
         currTime = nextDepartureTime;
+        Job oldJob = currentJob;
         setCurrentJob(null);
         if (!jobs.isEmpty()) {
             setCurrentJob(jobs.remove());
-            nextDepartureTime = currTime + currentJob.getSize();
+            nextDepartureTime = currTime + currentJob.getSizes(index);
         } else {
             nextDepartureTime = Integer.MAX_VALUE;
         }
         itemsLeft --;
+
+        return oldJob;
     }
 
     public void setCurrentJob(Job job) {
