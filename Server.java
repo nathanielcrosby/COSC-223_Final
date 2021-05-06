@@ -79,4 +79,8 @@ public class Server {
         return food;
     }
 
+    public int getIndex() {
+        return index;
+    }
+
 }
