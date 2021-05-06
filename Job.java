@@ -33,7 +33,7 @@ public class Job {
     public void setDepartureTime(int departureTime) {
         this.departureTime = departureTime;
     }
-/*
+
     public int getWaitUtility(){
         return this.waitUtility;
     }
@@ -65,17 +65,4 @@ public class Job {
         return winner;
     }
 
-    public void test(){
-        Server[] waitTimes = new Server[5];
-        for (int i =0; i< 5; i++){
-            int length = (int)(Math.random()*10);
-            waitTimes[i] = new Server();
-            for (int z = 0; i<length;i++){
-                Job newJob = new Job(1,1);
-                waitTimes[i].addJob(newJob);
-            }
-
-        }
-
-    }*/
 }
