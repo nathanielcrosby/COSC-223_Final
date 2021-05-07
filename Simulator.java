@@ -1,5 +1,3 @@
-import com.sun.deploy.util.ArrayUtil;
-
 import java.util.Random;
 
 public class Simulator {
@@ -16,7 +14,24 @@ public class Simulator {
 
     }
 
-    public double[][] Simulate(int jobs, int buffer, double p, double[] qs, int size) {
+    public int serverLengthPolicy(Server server1, Server server2) {
+        if (server1.getNumJobs() <= server2.getNumJobs()) {
+            return server1.getIndex();
+        } else {
+            return server2.getIndex();
+        }
+    }
+
+    public int randomServerPolicy(Server server1, Server server2) {
+        Random temp = new Random();
+        if (temp.nextBoolean()) {
+            return server1.getIndex();
+        } else {
+            return server2.getIndex();
+        }
+    }
+
+    public double[][] Simulate(int jobs, int buffer, double p, double[] qs, int size, int numStops) {
         assert(qs.length == size);
         this.jobs = jobs;
         this.buffer = buffer;
@@ -30,8 +45,8 @@ public class Simulator {
         Server[] servers = new Server[size];
 
         for (int i=0; i<size; i++) {
-            totalJobs[i]=0;
-            totalResponseTimes[i]=0;
+            totalJobs[i] = 0;
+            totalResponseTimes[i] = 0;
             servers[i] = new Server(i);
             arrivals[i] = 0;
             departures[i] = 0;
@@ -40,19 +55,26 @@ public class Simulator {
         nextArr = RandomGeometric(p);
 
         int i = 0;
+        int startingServerIndex = 0;
         int minInd;
         Server minDep;
         while (i <= jobs) {
             minInd = nextMinDepIndex(servers);
             minDep = servers[minInd];
 
+            //System.out.println(servers[1].getNextDepartureTime());
+            //System.out.println(CurrTime);
+
             if (nextArr < minDep.getNextDepartureTime()) {
                 CurrTime = nextArr;
+                startingServerIndex = serverLengthPolicy(servers[0], servers[1]);
+
                 if ((i - this.buffer) > 0) {
-                    totalJobs[0] += servers[0].getNumJobs();
+                    totalJobs[startingServerIndex] += servers[startingServerIndex].getNumJobs();
+                    arrivals[startingServerIndex]++;
                 }
 
-                servers[0].addJob(new Job(CurrTime, RandomGeometric(qs[0]), size));
+                servers[startingServerIndex].addJob(new Job(CurrTime, RandomGeometric(qs[startingServerIndex]), size, startingServerIndex));
                 i++;
                 nextArr = CurrTime + RandomGeometric(p);
 
@@ -64,23 +86,24 @@ public class Simulator {
                     totalResponseTimes[minInd] += (CurrTime - minDep.getCurrentJob().getArrivalTime());
                 }
 
-                if (minInd < size - 1) {
-                    Job newJob = minDep.departure();
-                    newJob.setSizes(RandomGeometric(qs[minInd+1]), minInd+1);
-                    servers[minInd + 1].addJob(newJob);
+                Job newJob = minDep.departure();
+                int newInd = newJob.pickServer(servers);
+                newJob.setArrivalTime(CurrTime);
 
+                if (newJob.getNumStops() < numStops) {
                     if ((i - this.buffer) > 0) {
-                        arrivals[minInd + 1]++;
-                        totalJobs[minInd + 1] += servers[minInd + 1].getNumJobs();
+                        arrivals[newInd]++;
+                        totalJobs[newInd] += servers[newInd].getNumJobs();
                     }
-                } else {
-                    minDep.departure();
+                    newJob.setSizes(RandomGeometric(qs[newInd]), newInd);
+                    servers[newInd].addJob(newJob);
+
                 }
 
             }
 
         }
-        arrivals[0] = jobs - buffer;
+
         for(int j = 0; j<size; j++) {
             totalJobs[j] = totalJobs[j] / arrivals[j];
             totalResponseTimes[j] = totalResponseTimes[j] / departures[j];
@@ -92,9 +115,14 @@ public class Simulator {
 
     private int nextMinDepIndex(Server[] servers) {
         int min = 0;
+
         for (int i=0; i<servers.length; i++) {
-            if (servers[i].getNextDepartureTime() <= servers[min].getNextDepartureTime()) {
+            if ((servers[i].getNumJobs() != 0 && servers[min].getNumJobs() != 0) && (servers[i].getNextDepartureTime() <= servers[min].getNextDepartureTime())
+                    && (servers[i].getNextDepartureTime() != Integer.MAX_VALUE)
+                    && (servers[i].getCurrentJob().getNumStops() >= servers[min].getCurrentJob().getNumStops())) {
+
                 min = i;
+
             }
         }
         return min;
