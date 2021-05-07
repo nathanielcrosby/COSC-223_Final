@@ -67,7 +67,7 @@ public class Server {
     public int getNumJobs() {
         if(currentJob != null) {
             return jobs.size() + 1;
-        }else
+        } else
             return 0;
     }
 
