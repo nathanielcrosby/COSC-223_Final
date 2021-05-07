@@ -1,3 +1,6 @@
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Random;
 
 public class Simulator {
@@ -7,7 +10,8 @@ public class Simulator {
     private int nextArr;
     private int CurrTime;
     private double[] totalJobs;
-    private double[] totalResponseTimes;
+    private double[] totalResponseTimes; // total time in each server
+    private ArrayList<Integer> waitTimes; //total time in all servers
     private int buffer;
 
     public Simulator() {
@@ -40,6 +44,7 @@ public class Simulator {
         CurrTime = 0;
         totalJobs = new double[size];
         totalResponseTimes = new double[size];
+        waitTimes = new ArrayList<Integer>();
         int[] arrivals = new int[size];
         int[] departures = new int[size];
         Server[] servers = new Server[size];
@@ -61,9 +66,6 @@ public class Simulator {
         while (i <= jobs) {
             minInd = nextMinDepIndex(servers);
             minDep = servers[minInd];
-
-            //System.out.println(servers[1].getNextDepartureTime());
-            //System.out.println(CurrTime);
 
             if (nextArr < minDep.getNextDepartureTime()) {
                 CurrTime = nextArr;
@@ -90,7 +92,7 @@ public class Simulator {
                 int newInd = newJob.pickServer(servers);
                 newJob.setArrivalTime(CurrTime);
 
-                if (newJob.getNumStops() < numStops) {
+                if (newInd != -1) {
                     if ((i - this.buffer) > 0) {
                         arrivals[newInd]++;
                         totalJobs[newInd] += servers[newInd].getNumJobs();
@@ -98,6 +100,12 @@ public class Simulator {
                     newJob.setSizes(RandomGeometric(qs[newInd]), newInd);
                     servers[newInd].addJob(newJob);
 
+                } else {
+                    waitTimes.add(CurrTime - newJob.getStartTime());
+                    //System.out.println();
+                    for (int j : newJob.stops) {
+                        //System.out.println(j);
+                    }
                 }
 
             }
