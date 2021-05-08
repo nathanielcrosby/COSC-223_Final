@@ -2,6 +2,9 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Random;
+import java.io.FileWriter;
+import java.io.IOException;
+
 
 public class Simulator {
     private int jobs;
@@ -12,6 +15,7 @@ public class Simulator {
     private double[] totalJobs;
     private double[] totalResponseTimes; // total time in each server
     private ArrayList<Integer> waitTimes; //total time in all servers
+    private ArrayList<Double> mealRatings; 
     private int buffer;
 
     public Simulator() {
@@ -45,6 +49,7 @@ public class Simulator {
         totalJobs = new double[size];
         totalResponseTimes = new double[size];
         waitTimes = new ArrayList<Integer>();
+        mealRatings = new ArrayList<Double>();
         int[] arrivals = new int[size];
         int[] departures = new int[size];
         Server[] servers = new Server[size];
@@ -102,9 +107,11 @@ public class Simulator {
 
                 } else {
                     waitTimes.add(CurrTime - newJob.getStartTime());
-                    //System.out.println();
+                    mealRatings.add(newJob.getMealRating());
+                    System.out.println();
+                    System.out.print("Stops: ");
                     for (int j : newJob.stops) {
-                        //System.out.println(j);
+                        System.out.print(j + " ");
                     }
                 }
 
@@ -145,5 +152,46 @@ public class Simulator {
             count++;
         }
         return count;
+    }
+
+    // Write Server Data to a filename.csv
+    private void serverDataToCSV(String filename) throws java.io.IOException{
+        double[][] results = new double[][]{totalJobs, totalResponseTimes};
+
+        // Write the data to filename.csv
+        FileWriter writer = new FileWriter("./" + filename + ".csv");
+        StringBuilder sb = new StringBuilder();
+        sb.append("Station 1,Station 2,Station 3,Station 4,Station 5,Station 6,Station 7,Station 8,Station 9, \n");
+
+        for(int r = 0; r < 2; r++){
+            for (int c = 0; c < 9; c++){
+                sb.append(Double.toString(Math.round(results[r][c] * 100.0) / 100.0));
+                if(c != 8) sb.append(",");
+            }
+            sb.append("\n");
+        }
+
+        writer.write(sb.toString());
+        writer.close();
+    }
+
+    // Write Job Data to filename.csv
+    private void jobDataToCSV(String filename) throws java.io.IOException{
+        double[][] results = new double[][]{totalJobs, totalResponseTimes};
+
+        // Write the data to filename.csv
+        FileWriter writer = new FileWriter("./" + filename + ".csv");
+        StringBuilder sb = new StringBuilder();
+        sb.append("Wait Time, Meal Ratings\n");
+
+        for(int r = 0; r < jobs; r++){
+            sb.append(Integer.toString(waitTimes.get(r)));
+            sb.append(",");
+            sb.append(Double.toString(Math.round(mealRatings.get(r) * 100.0) / 100.0));
+            sb.append("\n");
+        }
+
+        writer.write(sb.toString());
+        writer.close();
     }
 }
