@@ -47,10 +47,10 @@ public class Job {
 
         // SUBJECT TO CHANGE ON BOTH OF THESE
         // Wait Utility random double between 1/3 - 2/3
-        waitUtility = 0.33 + (0.33 * Math.random());
+        waitUtility = 0.5 + (0.5 * Math.random());
 
         // Food Utility random double between 1 - 2
-        foodUtility = 1.0 + (1.0 * Math.random());
+        foodUtility = 0.5 + (0.5 * Math.random());
 
         // Preference random doubles between 0 - 10
         preferences = new double[servers];
@@ -145,7 +145,7 @@ public class Job {
             }
 
             // Calculate Utilty of going to the ith station(1/2 Subject to Change)
-            score = (Math.pow(.5, numStops)) * foodUtility * preferences[i] - waitUtility * norm_waitTime;
+            score = Math.pow(.5, numStops) * foodUtility * preferences[i] - waitUtility * norm_waitTime;
             
             //System.out.println(score);
 
@@ -157,7 +157,7 @@ public class Job {
         }
 
         // If remaining stations are not worth waiting in, go sit down
-        if(highScore <= 0) {
+        if(highScore < 1) {
             winner = -1;
         }
 

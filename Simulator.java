@@ -57,7 +57,7 @@ public class Simulator {
         for (int i=0; i<size; i++) {
             totalJobs[i] = 0;
             totalResponseTimes[i] = 0;
-            servers[i] = new Server(i);
+            servers[i] = new Server(i,size,1000);
             arrivals[i] = 0;
             departures[i] = 0;
         }
@@ -74,15 +74,19 @@ public class Simulator {
 
             if (nextArr < minDep.getNextDepartureTime()) {
                 CurrTime = nextArr;
-                startingServerIndex = serverLengthPolicy(servers[0], servers[1]);
+                
+                for(int j = 0; j<RandomGeometric(1.0/3.0);j++){
+                    startingServerIndex = serverLengthPolicy(servers[0], servers[1]);
 
-                if ((i - this.buffer) > 0) {
-                    totalJobs[startingServerIndex] += servers[startingServerIndex].getNumJobs();
-                    arrivals[startingServerIndex]++;
+                    if ((i - this.buffer) > 0) {
+                        totalJobs[startingServerIndex] += servers[startingServerIndex].getNumJobs();
+                        arrivals[startingServerIndex]++;
+                    }
+
+                    servers[startingServerIndex].addJob(new Job(CurrTime, RandomGeometric(qs[startingServerIndex]), size, startingServerIndex));
+                    i++;
                 }
-
-                servers[startingServerIndex].addJob(new Job(CurrTime, RandomGeometric(qs[startingServerIndex]), size, startingServerIndex));
-                i++;
+                
                 nextArr = CurrTime + RandomGeometric(p);
 
             } else {
@@ -113,8 +117,8 @@ public class Simulator {
                     for (int j : newJob.stops) {
                         System.out.print(j + " ");
                     }
+                    System.out.println();
                 }
-
             }
 
         }

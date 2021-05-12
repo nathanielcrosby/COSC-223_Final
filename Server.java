@@ -32,8 +32,13 @@ public class Server {
     // The index associated with this server in the larger system
     private int index;
 
-    public Server(int index) {
+    // The number of servers in the system
+    private int servers;
+
+    public Server(int index,int servers,int capacity) {
         this.index = index;
+        this.servers = servers;
+        setItemsLeft(capacity);
         jobs = new LinkedList<Job>();
     }
 
@@ -59,14 +64,23 @@ public class Server {
         numjobs--;
         currTime = nextDepartureTime;
         Job oldJob = currentJob;
+
         setCurrentJob(null);
+        itemsLeft --;
+        
+        /*
+        if (itemsLeft == 0 && (index != 0 || index != 1)){
+            setCurrentJob(new Job(-1, itemsCapacity/200, servers, index));
+        }
+        */
+
+
         if (!jobs.isEmpty()) {
             setCurrentJob(jobs.remove());
             nextDepartureTime = currTime + currentJob.getSizes(index);
         } else {
             nextDepartureTime = Integer.MAX_VALUE;
         }
-        itemsLeft --;
 
         return oldJob;
     }
