@@ -44,19 +44,42 @@ public class Job {
         stops = new ArrayList<Integer>();
         stops.add(initIndex);
         
-
-        // SUBJECT TO CHANGE ON BOTH OF THESE
-        // Wait Utility random double between 1/3 - 2/3
+        // Wait Utility random double between 0.5 - 1.0
         waitUtility = 0.5 + (0.5 * Math.random());
 
-        // Food Utility random double between 1 - 2
+        // Food Utility random double between 0.5 - 1.0
         foodUtility = 0.5 + (0.5 * Math.random());
 
-        // Preference random doubles between 0 - 10
+        
+        /* ========= RANDOM PREFERENCES =========
+        reference random doubles between 0 - 10
         preferences = new double[servers];
         for(int i = 0; i<preferences.length; i++) {
             preferences[i] = Math.random()*10;
         }
+        */
+
+        /* ========= GOOD VAL MEAL =========
+        // Preferences are random doubles between 8-10 
+        // for Entrees and 2-4 for everything else
+        preferences = new double[servers];
+        for(int i = 0; i<preferences.length; i++) {
+            preferences[i] = 2 + (2 * Math.random());
+        }
+        preferences[3] = 8 + (2 * Math.random());
+        preferences[4] = 8 + (2 * Math.random());
+        */
+
+        // ========= REALLY BAD VAL MEAL ========= 
+        // Preferences are random doubles between 0-3 
+        // for Entrees and 4-6 for everything else
+        preferences = new double[servers];
+        for(int i = 0; i<preferences.length; i++) {
+            preferences[i] = 4 + (2 * Math.random());
+        }
+        preferences[3] = 3 * Math.random();
+        preferences[4] = 3 * Math.random();
+
 
     }
 

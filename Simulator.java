@@ -159,7 +159,7 @@ public class Simulator {
     }
 
     // Write Server Data to a filename.csv
-    private void serverDataToCSV(String filename) throws java.io.IOException{
+    public void serverDataToCSV(String filename) throws java.io.IOException{
         double[][] results = new double[][]{totalJobs, totalResponseTimes};
 
         // Write the data to filename.csv
@@ -180,15 +180,12 @@ public class Simulator {
     }
 
     // Write Job Data to filename.csv
-    private void jobDataToCSV(String filename) throws java.io.IOException{
-        double[][] results = new double[][]{totalJobs, totalResponseTimes};
-
-        // Write the data to filename.csv
+    public void jobDataToCSV(String filename) throws java.io.IOException{
         FileWriter writer = new FileWriter("./" + filename + ".csv");
         StringBuilder sb = new StringBuilder();
         sb.append("Wait Time, Meal Ratings\n");
 
-        for(int r = 0; r < jobs; r++){
+        for(int r = 0; r < totalJobs.length; r++){
             sb.append(Integer.toString(waitTimes.get(r)));
             sb.append(",");
             sb.append(Double.toString(Math.round(mealRatings.get(r) * 100.0) / 100.0));
