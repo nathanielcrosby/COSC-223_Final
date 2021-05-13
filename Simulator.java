@@ -39,7 +39,7 @@ public class Simulator {
         }
     }
 
-    public double[][] Simulate(int jobs, int buffer, double p, double[] qs, int size, int numStops) {
+    public double[][] Simulate(int jobs, int buffer, double p, double[] qs, int size) {
         assert(qs.length == size);
         this.jobs = jobs;
         this.buffer = buffer;
@@ -57,7 +57,7 @@ public class Simulator {
         for (int i=0; i<size; i++) {
             totalJobs[i] = 0;
             totalResponseTimes[i] = 0;
-            servers[i] = new Server(i);
+            servers[i] = new Server(i,size,1000);
             arrivals[i] = 0;
             departures[i] = 0;
         }
@@ -74,47 +74,54 @@ public class Simulator {
 
             if (nextArr < minDep.getNextDepartureTime()) {
                 CurrTime = nextArr;
-                startingServerIndex = serverLengthPolicy(servers[0], servers[1]);
+                
+                for(int j = 0; j<RandomGeometric(1.0/3.0);j++){
+                    startingServerIndex = serverLengthPolicy(servers[0], servers[1]);
 
-                if ((i - this.buffer) > 0) {
-                    totalJobs[startingServerIndex] += servers[startingServerIndex].getNumJobs();
-                    arrivals[startingServerIndex]++;
+                    if ((i - this.buffer) > 0) {
+                        totalJobs[startingServerIndex] += servers[startingServerIndex].getNumJobs();
+                        arrivals[startingServerIndex]++;
+                    }
+
+                    servers[startingServerIndex].addJob(new Job(CurrTime, RandomGeometric(qs[startingServerIndex]), size, startingServerIndex));
+                    i++;
                 }
-
-                servers[startingServerIndex].addJob(new Job(CurrTime, RandomGeometric(qs[startingServerIndex]), size, startingServerIndex));
-                i++;
+                
                 nextArr = CurrTime + RandomGeometric(p);
 
             } else {
                 CurrTime = minDep.getNextDepartureTime();
 
-                if ((i - this.buffer) > 0) {
+                if ((i - this.buffer) > 0 && (minDep.getCurrentJob().getStartTime() != -1)) {
                     departures[minInd]++;
                     totalResponseTimes[minInd] += (CurrTime - minDep.getCurrentJob().getArrivalTime());
                 }
 
                 Job newJob = minDep.departure();
-                int newInd = newJob.pickServer(servers);
-                newJob.setArrivalTime(CurrTime);
 
-                if (newInd != -1) {
-                    if ((i - this.buffer) > 0) {
-                        arrivals[newInd]++;
-                        totalJobs[newInd] += servers[newInd].getNumJobs();
-                    }
-                    newJob.setSizes(RandomGeometric(qs[newInd]), newInd);
-                    servers[newInd].addJob(newJob);
+                if (newJob.getStartTime() >= 0) {
+                    int newInd = newJob.pickServer(servers);
+                    newJob.setArrivalTime(CurrTime);
 
-                } else {
-                    waitTimes.add(CurrTime - newJob.getStartTime());
-                    mealRatings.add(newJob.getMealRating());
-                    System.out.println();
-                    System.out.print("Stops: ");
-                    for (int j : newJob.stops) {
-                        System.out.print(j + " ");
+                    if (newInd != -1) {
+                        if ((i - this.buffer) > 0) {
+                            arrivals[newInd]++;
+                            totalJobs[newInd] += servers[newInd].getNumJobs();
+                        }
+                        newJob.setSizes(RandomGeometric(qs[newInd]), newInd);
+                        servers[newInd].addJob(newJob);
+
+                    } else {
+                        waitTimes.add(CurrTime - newJob.getStartTime());
+                        mealRatings.add(newJob.getMealRating());
+                        System.out.println();
+                        System.out.print("Stops: ");
+                        for (int j : newJob.stops) {
+                            System.out.print(j + " ");
+                        }
+                        //System.out.println();
                     }
                 }
-
             }
 
         }
@@ -155,7 +162,7 @@ public class Simulator {
     }
 
     // Write Server Data to a filename.csv
-    private void serverDataToCSV(String filename) throws java.io.IOException{
+    public void serverDataToCSV(String filename) throws java.io.IOException{
         double[][] results = new double[][]{totalJobs, totalResponseTimes};
 
         // Write the data to filename.csv
@@ -176,15 +183,12 @@ public class Simulator {
     }
 
     // Write Job Data to filename.csv
-    private void jobDataToCSV(String filename) throws java.io.IOException{
-        double[][] results = new double[][]{totalJobs, totalResponseTimes};
-
-        // Write the data to filename.csv
+    public void jobDataToCSV(String filename) throws java.io.IOException{
         FileWriter writer = new FileWriter("./" + filename + ".csv");
         StringBuilder sb = new StringBuilder();
         sb.append("Wait Time, Meal Ratings\n");
 
-        for(int r = 0; r < jobs; r++){
+        for(int r = 0; r < totalJobs.length; r++){
             sb.append(Integer.toString(waitTimes.get(r)));
             sb.append(",");
             sb.append(Double.toString(Math.round(mealRatings.get(r) * 100.0) / 100.0));

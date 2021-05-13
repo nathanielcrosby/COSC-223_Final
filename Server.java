@@ -1,4 +1,3 @@
-
 import java.util.AbstractQueue;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -13,8 +12,8 @@ public class Server {
 
     // The departure time of the job in service
     private int nextDepartureTime = Integer.MAX_VALUE;
-    
-    // Current Time 
+
+    // Current Time
     private int currTime;
 
     // Number of jobs in the system
@@ -23,7 +22,7 @@ public class Server {
     // ================== IDRK ==================
     private int food;
 
-    // Capacity of servings that this station can hold 
+    // Capacity of servings that this station can hold
     private int itemsCapacity;
 
     // Number of servings left in this server
@@ -32,17 +31,18 @@ public class Server {
     // The index associated with this server in the larger system
     private int index;
 
-    public Server(int index) {
+    // The number of servers in the system
+    private int servers;
+
+    public Server(int index,int servers,int capacity) {
         this.index = index;
+        this.servers = servers;
+        setItemsLeft(capacity);
         jobs = new LinkedList<Job>();
     }
 
     // Add a job to this server
     public void addJob(Job job) {
-        if (itemsLeft == 0){
-            currTime += 10;
-            itemsLeft = itemsCapacity;
-        }
 
         numjobs++;
         currTime = job.getArrivalTime();
@@ -59,14 +59,25 @@ public class Server {
         numjobs--;
         currTime = nextDepartureTime;
         Job oldJob = currentJob;
+
         setCurrentJob(null);
-        if (!jobs.isEmpty()) {
+
+        if (index != 0 && index != 1) {
+            itemsLeft--;
+        }
+
+        if ((itemsLeft == 0) && (index != 0 && index != 1)){
+            //System.out.println("hrtr");
+            setCurrentJob(new Job(-1, itemsCapacity/300, servers, index));
+            nextDepartureTime = currTime + currentJob.getSizes(index);
+            itemsLeft = itemsCapacity;
+        } else if (!jobs.isEmpty()) {
             setCurrentJob(jobs.remove());
             nextDepartureTime = currTime + currentJob.getSizes(index);
+
         } else {
             nextDepartureTime = Integer.MAX_VALUE;
         }
-        itemsLeft --;
 
         return oldJob;
     }
@@ -89,10 +100,10 @@ public class Server {
 
     // Grab the number of jobs at the server right now
     public int getNumJobs() {
-        if(currentJob != null) {
+        if(currentJob != null && currentJob.getStartTime() >= 0) {
             return jobs.size() + 1;
         } else
-            return 0;
+            return jobs.size();
     }
 
     // Grab the departure time of the job in service
