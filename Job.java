@@ -16,7 +16,7 @@ public class Job {
     // Departure time from this station
     private int departureTime;
 
-    // Number of stations this student has stopped at 
+    // Number of stations this student has stopped at
     private int numStops = 0;
 
     // The stations that this student has visited (Probably dont need numStops above)
@@ -43,43 +43,44 @@ public class Job {
         numStops = 1;
         stops = new ArrayList<Integer>();
         stops.add(initIndex);
-        
+
         // Wait Utility random double between 0.5 - 1.0
         waitUtility = 0.5 + (0.5 * Math.random());
 
         // Food Utility random double between 0.5 - 1.0
         foodUtility = 0.5 + (0.5 * Math.random());
 
-        
-        /* ========= RANDOM PREFERENCES =========
-        reference random doubles between 0 - 10
+        /*
+        // ========= RANDOM PREFERENCES =========
+        // reference random doubles between 0 - 10
         preferences = new double[servers];
         for(int i = 0; i<preferences.length; i++) {
             preferences[i] = Math.random()*10;
         }
         */
 
-        /* ========= GOOD VAL MEAL =========
-        // Preferences are random doubles between 8-10 
+
+        // ========= GOOD VAL MEAL =========
+        // Preferences are random doubles between 8-10
         // for Entrees and 2-4 for everything else
         preferences = new double[servers];
         for(int i = 0; i<preferences.length; i++) {
             preferences[i] = 2 + (2 * Math.random());
         }
+        preferences[2] = 8 + (2 * Math.random());
         preferences[3] = 8 + (2 * Math.random());
-        preferences[4] = 8 + (2 * Math.random());
-        */
 
-        // ========= REALLY BAD VAL MEAL ========= 
-        // Preferences are random doubles between 0-3 
+        /*
+        // ========= REALLY BAD VAL MEAL =========
+        // Preferences are random doubles between 0-3
         // for Entrees and 4-6 for everything else
         preferences = new double[servers];
         for(int i = 0; i<preferences.length; i++) {
             preferences[i] = 4 + (2 * Math.random());
         }
+        preferences[2] = 3 * Math.random();
         preferences[3] = 3 * Math.random();
-        preferences[4] = 3 * Math.random();
-
+        */
 
     }
 
@@ -125,7 +126,7 @@ public class Job {
         return this.foodUtility;
     }
 
-    // Grab the number of stations this student has stopped at 
+    // Grab the number of stations this student has stopped at
     public int getNumStops() {
         return numStops;
     }
@@ -141,7 +142,7 @@ public class Job {
     }
 
     // Decide which station to go to next (if any) by weighing each station's
-    // food options against the wait time and picking the best one 
+    // food options against the wait time and picking the best one
     public int pickServer(Server[] servers){
 
         // Find the server with longest wait (for normalizing)
@@ -152,7 +153,7 @@ public class Job {
             }
         }
 
-        // Determine the best station (if any) to go to next 
+        // Determine the best station (if any) to go to next
         double highScore = 0;
         int winner = 0;
         double score = 0;
@@ -169,7 +170,7 @@ public class Job {
 
             // Calculate Utilty of going to the ith station(1/2 Subject to Change)
             score = Math.pow(.5, numStops) * foodUtility * preferences[i] - waitUtility * norm_waitTime;
-            
+
             //System.out.println(score);
 
             // Keep track of the best station and the score of that station
@@ -180,7 +181,7 @@ public class Job {
         }
 
         // If remaining stations are not worth waiting in, go sit down
-        if(highScore < 1) {
+        if(highScore < 0.5) {
             winner = -1;
         }
 
