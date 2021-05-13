@@ -35,7 +35,7 @@ public class Job {
     private double mealRating;
 
 
-    public Job(int arrivalTime, int jobSize, int servers, int initIndex) {
+    public Job(int arrivalTime, int jobSize, int servers, int initIndex, int mealQuality) {
         this.arrivalTime = arrivalTime;
         this.startTime = arrivalTime;
         sizes = new int[servers];
@@ -50,37 +50,19 @@ public class Job {
         // Food Utility random double between 0.5 - 1.0
         foodUtility = 0.5 + (0.5 * Math.random());
 
-        /*
-        // ========= RANDOM PREFERENCES =========
-        // reference random doubles between 0 - 10
-        preferences = new double[servers];
-        for(int i = 0; i<preferences.length; i++) {
-            preferences[i] = Math.random()*10;
-        }
-        */
-
-
-        // ========= GOOD VAL MEAL =========
-        // Preferences are random doubles between 8-10
-        // for Entrees and 2-4 for everything else
-        preferences = new double[servers];
-        for(int i = 0; i<preferences.length; i++) {
-            preferences[i] = 2 + (2 * Math.random());
-        }
-        preferences[2] = 8 + (2 * Math.random());
-        preferences[3] = 8 + (2 * Math.random());
-
-        /*
-        // ========= REALLY BAD VAL MEAL =========
-        // Preferences are random doubles between 0-3
-        // for Entrees and 4-6 for everything else
-        preferences = new double[servers];
-        for(int i = 0; i<preferences.length; i++) {
-            preferences[i] = 4 + (2 * Math.random());
-        }
-        preferences[2] = 3 * Math.random();
-        preferences[3] = 3 * Math.random();
-        */
+        if (mealQuality < 0) {
+            preferences = new double[servers];
+            for(int i = 0; i<preferences.length; i++) {
+                preferences[i] = Math.random()*10;
+            }
+        } else {
+            preferences = new double[servers];
+            for(int i = 0; i<preferences.length; i++) {
+                preferences[i] = 2 + (2 * Math.random());
+            }
+            preferences[2] = mealQuality + (2 * Math.random());
+            preferences[3] = mealQuality + (2 * Math.random());
+            }
 
     }
 
@@ -93,7 +75,12 @@ public class Job {
     public void setSizes(int size, int index) {
         sizes[index] = size;
         numStops++;
-        stops.add(index);
+        if (index == 2 || index == 3) {
+            stops.add(2);
+            stops.add(3);
+        } else {
+            stops.add(index);
+        }
     }
 
     // Grab this student's arrival time at this station
@@ -169,7 +156,7 @@ public class Job {
             }
 
             // Calculate Utilty of going to the ith station(1/2 Subject to Change)
-            score = Math.pow(.5, numStops) * foodUtility * preferences[i] - waitUtility * norm_waitTime;
+            score = Math.pow(.5, numStops) * (foodUtility * preferences[i] - waitUtility * norm_waitTime);
 
             //System.out.println(score);
 

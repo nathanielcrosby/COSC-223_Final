@@ -39,7 +39,7 @@ public class Simulator {
         }
     }
 
-    public double[][] Simulate(int jobs, int buffer, double p, double[] qs, int size) {
+    public double[][] Simulate(int jobs, int buffer, double p, double[] qs, int size, int mealQuality, boolean shock) {
         assert(qs.length == size);
         this.jobs = jobs;
         this.buffer = buffer;
@@ -53,6 +53,13 @@ public class Simulator {
         int[] arrivals = new int[size];
         int[] departures = new int[size];
         Server[] servers = new Server[size];
+
+        int shockPoint;
+        if(shock) {
+            shockPoint = (int) ((0.5 + Math.random() * .3) * jobs);
+        } else {
+            shockPoint = jobs+1;
+        }
 
         for (int i=0; i<size; i++) {
             totalJobs[i] = 0;
@@ -68,14 +75,20 @@ public class Simulator {
         int startingServerIndex = 0;
         int minInd;
         Server minDep;
+        int numNewJobs;
         while (i <= jobs) {
             minInd = nextMinDepIndex(servers);
             minDep = servers[minInd];
 
             if (nextArr < minDep.getNextDepartureTime()) {
                 CurrTime = nextArr;
-                
-                for(int j = 0; j<RandomGeometric(1.0/3.0);j++){
+
+                if (i < shockPoint || i > (shockPoint + 0.05*jobs)) {
+                    numNewJobs = RandomGeometric(1.0 / 3.0);
+                } else {
+                    numNewJobs = RandomGeometric(1.0/6.0);
+                }
+                for(int j = 0; j<numNewJobs; j++){
                     startingServerIndex = serverLengthPolicy(servers[0], servers[1]);
 
                     if ((i - this.buffer) > 0) {
@@ -83,7 +96,7 @@ public class Simulator {
                         arrivals[startingServerIndex]++;
                     }
 
-                    servers[startingServerIndex].addJob(new Job(CurrTime, RandomGeometric(qs[startingServerIndex]), size, startingServerIndex));
+                    servers[startingServerIndex].addJob(new Job(CurrTime, RandomGeometric(qs[startingServerIndex]), size, startingServerIndex, mealQuality));
                     i++;
                 }
                 
@@ -114,10 +127,10 @@ public class Simulator {
                     } else {
                         waitTimes.add(CurrTime - newJob.getStartTime());
                         mealRatings.add(newJob.getMealRating());
-                        System.out.println();
-                        System.out.print("Stops: ");
+                        //System.out.println();
+                        //System.out.print("Stops: ");
                         for (int j : newJob.stops) {
-                            System.out.print(j + " ");
+                            //System.out.print(j + " ");
                         }
                         //System.out.println();
                     }
@@ -188,7 +201,7 @@ public class Simulator {
         StringBuilder sb = new StringBuilder();
         sb.append("Wait Time, Meal Ratings\n");
 
-        for(int r = 0; r < totalJobs.length; r++){
+        for(int r = 0; r < waitTimes.size(); r++){
             sb.append(Integer.toString(waitTimes.get(r)));
             sb.append(",");
             sb.append(Double.toString(Math.round(mealRatings.get(r) * 100.0) / 100.0));
