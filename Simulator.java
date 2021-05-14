@@ -39,7 +39,7 @@ public class Simulator {
         }
     }
 
-    public double[][] Simulate(int jobs, int buffer, double p, double[] qs, int size, int mealQuality, boolean shock) {
+    public double[][] Simulate(int jobs, int buffer, double p, double[] qs, int size, int mealQuality, boolean shock, double traffic) {
         assert(qs.length == size);
         this.jobs = jobs;
         this.buffer = buffer;
@@ -84,9 +84,9 @@ public class Simulator {
                 CurrTime = nextArr;
 
                 if (i < shockPoint || i > (shockPoint + 0.05*jobs)) {
-                    numNewJobs = RandomGeometric(1.0 / 3.0);
+                    numNewJobs = RandomGeometric(traffic);
                 } else {
-                    numNewJobs = RandomGeometric(1.0/6.0);
+                    numNewJobs = RandomGeometric(traffic/2.0);
                 }
                 for(int j = 0; j<numNewJobs; j++){
                     startingServerIndex = serverLengthPolicy(servers[0], servers[1]);
@@ -181,7 +181,7 @@ public class Simulator {
         // Write the data to filename.csv
         FileWriter writer = new FileWriter("./" + filename + ".csv");
         StringBuilder sb = new StringBuilder();
-        sb.append("Station 1,Station 2,Station 3,Station 4,Station 5,Station 6,Station 7,Station 8,Station 9, \n");
+        sb.append("Station 1,Station 2,Station 3,Station 4,Station 5,Station 6,Station 7,Station 8,Station 9 \n");
 
         for(int r = 0; r < 2; r++){
             for (int c = 0; c < 9; c++){
