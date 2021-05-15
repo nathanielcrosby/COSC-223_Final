@@ -67,8 +67,7 @@ public class Server {
         }
 
         if ((itemsLeft == 0) && (index != 0 && index != 1)){
-            //System.out.println("hrtr");
-            setCurrentJob(new Job(-1, itemsCapacity/300, servers, index));
+            setCurrentJob(new Job(-1, itemsCapacity/300, servers, index, 0));
             nextDepartureTime = currTime + currentJob.getSizes(index);
             itemsLeft = itemsCapacity;
         } else if (!jobs.isEmpty()) {
