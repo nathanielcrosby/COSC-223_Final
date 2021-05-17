@@ -27,7 +27,7 @@ traffic_servers = pd.concat([server2,server3,server4,server5,server6],ignore_ind
 line_size = traffic_servers.iloc[::2,:]
 wait_times = traffic_servers.iloc[1::2,:]
 
-'''
+
 #Plots meal rating vs wait time at different traffic levels
 fig = plt.figure(figsize=(9,9))
 ax1 = fig.add_subplot(3,2,1)
@@ -43,32 +43,38 @@ ax5=plt.scatter(jobs6['Wait Time'], jobs6[' Meal Ratings'])
 plt.show()
 
 #plots line size vs traffic at all 9 stations
-plt.plot(line_size['Traffic'], line_size['Station 1'], label="1")
-plt.plot(line_size['Traffic'], line_size['Station 2'], label="2")
-plt.plot(line_size['Traffic'], line_size['Station 3'], label="3")
-plt.plot(line_size['Traffic'], line_size['Station 4'], label="4")
-plt.plot(line_size['Traffic'], line_size['Station 5'], label="5")
-plt.plot(line_size['Traffic'], line_size['Station 6'], label="6")
-plt.plot(line_size['Traffic'], line_size['Station 7'], label="7")
-plt.plot(line_size['Traffic'], line_size['Station 8'], label="8")
-plt.plot(line_size['Traffic'], line_size['Station 9 '], label="9")
+plt.plot(line_size['Traffic'], line_size['Station 1'], label="Card Swipe #1")
+plt.plot(line_size['Traffic'], line_size['Station 2'], label="Card Swipe #2")
+plt.plot(line_size['Traffic'], line_size['Station 3'], label="Entree 1")
+plt.plot(line_size['Traffic'], line_size['Station 4'], label="Entree 2")
+plt.plot(line_size['Traffic'], line_size['Station 5'], label="Lighter Side")
+plt.plot(line_size['Traffic'], line_size['Station 6'], label="Salad")
+plt.plot(line_size['Traffic'], line_size['Station 7'], label="Sandwiches")
+plt.plot(line_size['Traffic'], line_size['Station 8'], label="Pasta")
+plt.plot(line_size['Traffic'], line_size['Station 9'], label="Pizza")
+plt.title("Line Sizes vs. Traffic (Random Preferences)")
+plt.xlabel("Traffic Level")
+plt.ylabel("Line Size")
 plt.legend()
 plt.show()
 
 #plots wait times vs traffic level at all 9 stations
-plt.plot(wait_times['Traffic'], wait_times['Station 1'], label="1")
-plt.plot(wait_times['Traffic'], wait_times['Station 2'], label="2")
-plt.plot(wait_times['Traffic'], wait_times['Station 3'], label="3")
-plt.plot(wait_times['Traffic'], wait_times['Station 4'], label="4")
-plt.plot(wait_times['Traffic'], wait_times['Station 5'], label="5")
-plt.plot(wait_times['Traffic'], wait_times['Station 6'], label="6")
-plt.plot(wait_times['Traffic'], wait_times['Station 7'], label="7")
-plt.plot(wait_times['Traffic'], wait_times['Station 8'], label="8")
-plt.plot(wait_times['Traffic'], wait_times['Station 9 '], label="9")
+plt.plot(wait_times['Traffic'], wait_times['Station 1'], label="Card Swipe #1")
+plt.plot(wait_times['Traffic'], wait_times['Station 2'], label="Card Swipe #2")
+plt.plot(wait_times['Traffic'], wait_times['Station 3'], label="Entree 1")
+plt.plot(wait_times['Traffic'], wait_times['Station 4'], label="Entree 2")
+plt.plot(wait_times['Traffic'], wait_times['Station 5'], label="Lighter Side")
+plt.plot(wait_times['Traffic'], wait_times['Station 6'], label="Salad")
+plt.plot(wait_times['Traffic'], wait_times['Station 7'], label="Sandwiches")
+plt.plot(wait_times['Traffic'], wait_times['Station 8'], label="Pasta")
+plt.plot(wait_times['Traffic'], wait_times['Station 9'], label="Pizza")
+plt.title("Wait Times vs. Traffic (Random Preferences)")
+plt.xlabel("Traffic Level")
+plt.ylabel("Wait Time")
 plt.legend()
 plt.show()
 
-'''
+
 
 # Read in Meal Rating Experiment Data
 jobs1 = pd.read_csv("Meal Rating Experiment/jobs_1.csv").assign(entree_rating = 1)
