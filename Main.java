@@ -5,19 +5,19 @@ import java.io.File;
 public class Main {
     public static void main(String[] args) {
         Simulator simulator = new Simulator();
-
-        double vals[][] = simulator.Simulate(7000, 1000, 0.5, new double[]{0.99, 0.99, 0.4, 0.4, 0.6, 0.6, 0.6, 0.6, 0.7}, 9, 3, false,1.0/3.0);
+/*
+        double vals[][] = simulator.Simulate(7000, 1000, 0.5, new double[]{0.99, 0.99, 0.4, 0.4, 0.6, 0.6, 0.6, 0.6, 0.7}, 9, 3, false,1.0/3.0, false);
         System.out.println(Arrays.toString(vals[0]));
         System.out.println(Arrays.toString(vals[1]));
 
         System.out.println("------------------------------------------------------");
 
-        double vals2[][] = simulator.Simulate2(7000, 1000, 0.5, new double[]{0.99, 0.99, 0.4, 0.4, 0.6, 0.6, 0.6, 0.6, 0.7}, 9, 3, false,1.0/3.0);
+        double vals2[][] = simulator.Simulate(7000, 1000, 0.5, new double[]{0.99, 0.99, 0.4, 0.4, 0.6, 0.6, 0.6, 0.6, 0.7}, 9, 3, false,1.0/3.0, true);
         System.out.println(Arrays.toString(vals2[0]));
         System.out.println(Arrays.toString(vals2[1]));
 
 
-/*
+*/
 
         // Run Traffic Experiment
         // =======================================================================================
@@ -27,7 +27,7 @@ public class Main {
         f.mkdirs();
 
         for (int i = 2 ; i < 7 ; i++){
-            simulator.Simulate(7000, 1000, 0.5, new double[]{0.99, 0.99, 0.4, 0.4, 0.6, 0.6, 0.6, 0.6, 0.7}, 9, -1, false,1.0/i);
+            simulator.Simulate(7000, 1000, 0.5, new double[]{0.99, 0.99, 0.4, 0.4, 0.6, 0.6, 0.6, 0.6, 0.7}, 9, -1, false,1.0/i, false);
 
             try{ simulator.serverDataToCSV("./Traffic Experiment/server_" + i);} 
             catch(IOException e){ System.out.println("IOException"); }
@@ -50,7 +50,7 @@ public class Main {
         f.mkdirs();
 
         for (int i = 1 ; i <= 8 ; i++){
-            simulator.Simulate(7000, 1000, 0.5, new double[]{0.99, 0.99, 0.4, 0.4, 0.6, 0.6, 0.6, 0.6, 0.7}, 9, i, false,1.0/3.0);
+            simulator.Simulate(7000, 1000, 0.5, new double[]{0.99, 0.99, 0.4, 0.4, 0.6, 0.6, 0.6, 0.6, 0.7}, 9, i, false,1.0/3.0, false);
 
             try{ simulator.serverDataToCSV("./Meal Rating Experiment/server_" + i);} 
             catch(IOException e){ System.out.println("IOException"); }
@@ -72,22 +72,22 @@ public class Main {
         f.mkdirs();
 
         // Shock & Random Preferences
-        simulator.Simulate(7000, 1000, 0.5, new double[]{0.99, 0.99, 0.4, 0.4, 0.6, 0.6, 0.6, 0.6, 0.7}, 9, -1, true,1.0/3.0);
+        simulator.Simulate(7000, 1000, 0.5, new double[]{0.99, 0.99, 0.4, 0.4, 0.6, 0.6, 0.6, 0.6, 0.7}, 9, -1, true,1.0/3.0, false);
         try{ simulator.serverDataToCSV("./Shock Experiment/server_shock_r");} 
         catch(IOException e){ System.out.println("IOException"); }
         try{ simulator.jobDataToCSV("./Shock Experiment/jobs_shock_r");} 
         catch(IOException e){ System.out.println("IOException"); }
 
         // Shock & Great Meal
-        simulator.Simulate(7000, 1000, 0.5, new double[]{0.99, 0.99, 0.4, 0.4, 0.6, 0.6, 0.6, 0.6, 0.7}, 9, 8, true,1.0/3.0);
+        simulator.Simulate(7000, 1000, 0.5, new double[]{0.99, 0.99, 0.4, 0.4, 0.6, 0.6, 0.6, 0.6, 0.7}, 9, 8, true,1.0/3.0, false);
         try{ simulator.serverDataToCSV("./Shock Experiment/server_shock_g");} 
         catch(IOException e){ System.out.println("IOException"); }
         try{ simulator.jobDataToCSV("./Shock Experiment/jobs_shock_g");} 
         catch(IOException e){ System.out.println("IOException"); }
 
         // Shock & Bad Meal
-        simulator.Simulate(7000, 1000, 0.5, new double[]{0.99, 0.99, 0.4, 0.4, 0.6, 0.6, 0.6, 0.6, 0.7}, 9, 3, true,1.0/3.0);
-        try{ simulator.serverDataToCSV("./Shock Experiment/server_shock_b");} 
+        simulator.Simulate(7000, 1000, 0.5, new double[]{0.99, 0.99, 0.4, 0.4, 0.6, 0.6, 0.6, 0.6, 0.7}, 9, 3, true,1.0/3.0, false);
+        try{ simulator.serverDataToCSV("./Shock Experiment/server_shock_b");}
         catch(IOException e){ System.out.println("IOException"); }
         try{ simulator.jobDataToCSV("./Shock Experiment/jobs_shock_b");} 
         catch(IOException e){ System.out.println("IOException"); }
@@ -95,25 +95,23 @@ public class Main {
         System.out.println("Shock Experiment Done");
         // =======================================================================================
 
- */
 
-/*
         // ====================================SPLITTING UP GROUPS EXPERIMENT (NOT RAN YET)===================================================
 
         // Run Traffic Experiment
         // =======================================================================================
 
         // Make Traffic Experiment Folder for the Data
-        File f = new File("./Traffic Experiment2");
+        f = new File("./Traffic Experiment Groups");
         f.mkdirs();
 
         for (int i = 2 ; i < 7 ; i++){
-            simulator.Simulate2(7000, 1000, 0.5, new double[]{0.99, 0.99, 0.4, 0.4, 0.6, 0.6, 0.6, 0.6, 0.7}, 9, -1, false,1.0/i);
+            simulator.Simulate(7000, 1000, 0.5, new double[]{0.99, 0.99, 0.4, 0.4, 0.6, 0.6, 0.6, 0.6, 0.7}, 9, -1, false,1.0/i, true);
 
-            try{ simulator.serverDataToCSV("./Traffic Experiment/server_" + i);}
+            try{ simulator.serverDataToCSV("./Traffic Experiment Groups/server_" + i);}
             catch(IOException e){ System.out.println("IOException"); }
 
-            try{ simulator.jobDataToCSV("./Traffic Experiment/jobs_" + i);}
+            try{ simulator.jobDataToCSV("./Traffic Experiment Groups/jobs_" + i);}
             catch(IOException e){ System.out.println("IOException"); }
 
             System.out.print(" . ");
@@ -127,16 +125,16 @@ public class Main {
         // =======================================================================================
 
         // Make Meal Rating Experiment Folder for the Data
-        f = new File("./Meal Rating Experiment2");
+        f = new File("./Meal Rating Experiment Groups");
         f.mkdirs();
 
         for (int i = 1 ; i <= 8 ; i++){
-            simulator.Simulate2(7000, 1000, 0.5, new double[]{0.99, 0.99, 0.4, 0.4, 0.6, 0.6, 0.6, 0.6, 0.7}, 9, i, false,1.0/3.0);
+            simulator.Simulate(7000, 1000, 0.5, new double[]{0.99, 0.99, 0.4, 0.4, 0.6, 0.6, 0.6, 0.6, 0.7}, 9, i, false, 1.0/3.0, true);
 
-            try{ simulator.serverDataToCSV("./Meal Rating Experiment/server_" + i);}
+            try{ simulator.serverDataToCSV("./Meal Rating Experiment Groups/server_" + i);}
             catch(IOException e){ System.out.println("IOException"); }
 
-            try{ simulator.jobDataToCSV("./Meal Rating Experiment/jobs_" + i);}
+            try{ simulator.jobDataToCSV("./Meal Rating Experiment Groups/jobs_" + i);}
             catch(IOException e){ System.out.println("IOException"); }
 
             System.out.print(" . ");
@@ -150,32 +148,18 @@ public class Main {
 
         // Make Traffic Experiment Folder for the Data
 
-        f = new File("./Shock Experiment2");
+        f = new File("./Shock Experiment Groups");
         f.mkdirs();
 
         // Shock & Random Preferences
-        simulator.Simulate2(7000, 1000, 0.5, new double[]{0.99, 0.99, 0.4, 0.4, 0.6, 0.6, 0.6, 0.6, 0.7}, 9, -1, true,1.0/3.0);
-        try{ simulator.serverDataToCSV("./Shock Experiment/server_shock_r2");}
+        simulator.Simulate(7000, 1000, 0.5, new double[]{0.99, 0.99, 0.4, 0.4, 0.6, 0.6, 0.6, 0.6, 0.7}, 9, -1, true, 1.0/3.0, true);
+        try{ simulator.serverDataToCSV("./Shock Experiment Groups/server_shock_r");}
         catch(IOException e){ System.out.println("IOException"); }
-        try{ simulator.jobDataToCSV("./Shock Experiment/jobs_shock_r2");}
-        catch(IOException e){ System.out.println("IOException"); }
-
-        // Shock & Great Meal
-        simulator.Simulate2(7000, 1000, 0.5, new double[]{0.99, 0.99, 0.4, 0.4, 0.6, 0.6, 0.6, 0.6, 0.7}, 9, 8, true,1.0/3.0);
-        try{ simulator.serverDataToCSV("./Shock Experiment/server_shock_g2");}
-        catch(IOException e){ System.out.println("IOException"); }
-        try{ simulator.jobDataToCSV("./Shock Experiment/jobs_shock_g2");}
-        catch(IOException e){ System.out.println("IOException"); }
-
-        // Shock & Bad Meal
-        simulator.Simulate2(7000, 1000, 0.5, new double[]{0.99, 0.99, 0.4, 0.4, 0.6, 0.6, 0.6, 0.6, 0.7}, 9, 3, true,1.0/3.0);
-        try{ simulator.serverDataToCSV("./Shock Experiment/server_shock_b2");}
-        catch(IOException e){ System.out.println("IOException"); }
-        try{ simulator.jobDataToCSV("./Shock Experiment/jobs_shock_b2");}
+        try{ simulator.jobDataToCSV("./Shock Experiment Groups/jobs_shock_r");}
         catch(IOException e){ System.out.println("IOException"); }
 
         System.out.println("Shock Experiment Done");
         // =======================================================================================
-         */
+
     }
 }
