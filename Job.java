@@ -34,10 +34,13 @@ public class Job {
     // A measure of how good this student's experience at Val was (Meal & Wait time)
     private double mealRating;
 
+    private double portionSize;
 
-    public Job(int arrivalTime, int jobSize, int servers, int initIndex, int mealQuality) {
+
+    public Job(int arrivalTime, int jobSize, int servers, int initIndex, int mealQuality, int sideQuality, double portionSize) {
         this.arrivalTime = arrivalTime;
         this.startTime = arrivalTime;
+        this.portionSize = portionSize;
         sizes = new int[servers];
         this.sizes[initIndex] = jobSize;
         numStops = 1;
@@ -58,11 +61,12 @@ public class Job {
         } else {
             preferences = new double[servers];
             for(int i = 0; i<preferences.length; i++) {
-                preferences[i] = 2 + (2 * Math.random());
+                preferences[i] = sideQuality + (2 * Math.random());
             }
             preferences[2] = mealQuality + (2 * Math.random());
             preferences[3] = mealQuality + (2 * Math.random());
-            }
+
+        }
 
     }
 
@@ -156,7 +160,7 @@ public class Job {
             }
 
             // Calculate Utilty of going to the ith station(1/2 Subject to Change)
-            score = Math.pow(.5, numStops) * (foodUtility * preferences[i] - waitUtility * norm_waitTime);
+            score = Math.pow(portionSize, numStops) * (foodUtility * preferences[i] - waitUtility * norm_waitTime);
 
             //System.out.println(score);
 

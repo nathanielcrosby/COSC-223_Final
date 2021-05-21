@@ -34,9 +34,12 @@ public class Server {
     // The number of servers in the system
     private int servers;
 
-    public Server(int index,int servers,int capacity) {
+    private double portionSize;
+
+    public Server(int index,int servers,int capacity, double portionSize) {
         this.index = index;
         this.servers = servers;
+        this.portionSize = portionSize;
         setItemsLeft(capacity);
         jobs = new LinkedList<Job>();
     }
@@ -67,7 +70,7 @@ public class Server {
         }
 
         if ((itemsLeft == 0) && (index != 0 && index != 1)){
-            setCurrentJob(new Job(-1, itemsCapacity/300, servers, index, 0));
+            setCurrentJob(new Job(-1, itemsCapacity/300, servers, index, 0, 0, 0));
             nextDepartureTime = currTime + currentJob.getSizes(index);
             itemsLeft = itemsCapacity;
         } else if (!jobs.isEmpty()) {
@@ -88,8 +91,8 @@ public class Server {
 
     // Set the capacity and items left of this server
     public void setItemsLeft(int left){
-        itemsCapacity = left;
-        itemsLeft = left;
+        itemsCapacity = (int) ( left - (0.5 - portionSize)*left);
+        itemsLeft = itemsCapacity;
     }
 
     // Grab the current job being serviced by this server

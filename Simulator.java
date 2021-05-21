@@ -47,7 +47,7 @@ public class Simulator {
         }
     }
 
-    public double[][] Simulate(int jobs, int buffer, double p, double[] qs, int size, int mealQuality, boolean shock, double traffic, boolean groupQueue) {
+    public double[][] Simulate(int jobs, int buffer, double p, double[] qs, int size, int mealQuality, int sideQuality, boolean shock, double traffic, boolean groupQueue, double portionSize) {
         assert(qs.length == size);
         this.jobs = jobs;
         this.buffer = buffer;
@@ -72,7 +72,7 @@ public class Simulator {
         for (int i=0; i<size; i++) {
             totalJobs[i] = 0;
             totalResponseTimes[i] = 0;
-            servers[i] = new Server(i,size,1000);
+            servers[i] = new Server(i,size,1000, portionSize);
             arrivals[i] = 0;
             departures[i] = 0;
         }
@@ -107,7 +107,7 @@ public class Simulator {
                         arrivals[startingServerIndex]++;
                     }
 
-                    servers[startingServerIndex].addJob(new Job(CurrTime, RandomGeometric(qs[startingServerIndex]), size, startingServerIndex, mealQuality));
+                    servers[startingServerIndex].addJob(new Job(CurrTime, RandomGeometric(qs[startingServerIndex]), size, startingServerIndex, mealQuality, sideQuality, portionSize));
                     i++;
                 }
                 
