@@ -18,19 +18,19 @@ The first 2 are the card swipe, the next 2 are entree, the last is pizza and the
 It then runs through the simulation of the queueing system where jobs are added, go to different stations and then leave.
 Built into this class are the save csv functions.
  
-Simulate(): The main simulate command
--jobs The number of jobs that will be added to the system.
--buffer The number of jobs to wait before equilibrium.
--p The geometric variable for when groups arrive.
--qs An array of the geometric variables for job sizes at each station.
--size The number of stations/
--mealQuality The baseline value for how much students like the entree.
--sideQuality The baseline value for how much students like the other stations.
--shock A boolean for whether or not to add a shock.
--traffic A geometric variable for how large the arriving group will be.
--groupQueue A boolean for whether or not the groups stay together.
--portionSize The fraction that the food scores are multiplied by after each stop. Simulates larger portions.
--return 2 arrays: the first is average line size for each server, the second is average wait time for each server
+*Simulate()*: The main simulate command
+- jobs: The number of jobs that will be added to the system.
+- buffer: The number of jobs to wait before equilibrium.
+- p: The geometric variable for when groups arrive.
+- qs: An array of the geometric variables for job sizes at each station.
+- size: The number of stations/
+- mealQuality: The baseline value for how much students like the entree.
+- sideQuality: The baseline value for how much students like the other stations.
+- shock: A boolean for whether or not to add a shock.
+- traffic: A geometric variable for how large the arriving group will be.
+- groupQueue: A boolean for whether or not the groups stay together.
+- portionSize: The fraction that the food scores are multiplied by after each stop. Simulates larger portions.
+- return 2 arrays: the first is average line size for each server, the second is average wait time for each server
    
 
 Server():
