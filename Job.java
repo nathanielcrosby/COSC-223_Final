@@ -53,10 +53,12 @@ public class Job {
         // Food Utility random double between 0.5 - 1.0
         foodUtility = 0.5 + (0.5 * Math.random());
 
+        // If mealQuality is not set, randomize preferences
+        // Otherwise make range of 2 for meal and side quality
         if (mealQuality < 0) {
             preferences = new double[servers];
             for(int i = 0; i<preferences.length; i++) {
-                preferences[i] = Math.random()*10;
+                preferences[i] = Math.random()*7;
             }
         } else {
             preferences = new double[servers];
@@ -70,12 +72,20 @@ public class Job {
 
     }
 
-    // ================== IDRK ==================
+    /**
+     * Returns job size at specific server index
+     * @param index index of specific server in array
+     * @return int: job size at this server
+     */
     public int getSizes(int index) {
         return sizes[index];
     }
 
-    // ================== IDRK ==================
+    /**
+     * Sets the job size at specific server.
+     * @param size size of job: int
+     * @param index index for server: int
+     */
     public void setSizes(int size, int index) {
         sizes[index] = size;
         numStops++;

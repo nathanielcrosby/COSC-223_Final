@@ -5,19 +5,6 @@ import java.io.File;
 public class Main {
     public static void main(String[] args) {
         Simulator simulator = new Simulator();
-/*
-        double vals[][] = simulator.Simulate(7000, 1000, 0.5, new double[]{0.99, 0.99, 0.4, 0.4, 0.6, 0.6, 0.6, 0.6, 0.7}, 9, 3, false,1.0/3.0, false);
-        System.out.println(Arrays.toString(vals[0]));
-        System.out.println(Arrays.toString(vals[1]));
-
-        System.out.println("------------------------------------------------------");
-
-        double vals2[][] = simulator.Simulate(7000, 1000, 0.5, new double[]{0.99, 0.99, 0.4, 0.4, 0.6, 0.6, 0.6, 0.6, 0.7}, 9, 3, false,1.0/3.0, true);
-        System.out.println(Arrays.toString(vals2[0]));
-        System.out.println(Arrays.toString(vals2[1]));
-
-*/
-
 
         // Run Traffic Experiment
         // =======================================================================================
@@ -67,7 +54,7 @@ public class Main {
 
         // Run Shock Experiment
         // =======================================================================================
-        
+
         // Make Traffic Experiment Folder for the Data
         f = new File("./Shock Experiment");
         f.mkdirs();
@@ -96,18 +83,17 @@ public class Main {
         System.out.println("Shock Experiment Done");
         // =======================================================================================
 
-
-        // ====================================SPLITTING UP GROUPS EXPERIMENT (NOT RAN YET)===================================================
-
-        // Run Traffic Experiment
+        // Run Traffic Experiment with Groups
+        //This is when we vary traffic levels and whether or not the groups split up
         // =======================================================================================
 
-        // Make Traffic Experiment Folder for the Data
+        // Make Traffic Experiment Group Folder for the Data
+
         f = new File("./Traffic Experiment Groups");
         f.mkdirs();
 
-        for (int i = 2 ; i < 7 ; i++){
-            simulator.Simulate(50000, 5000, 0.5, new double[]{0.99, 0.99, 0.4, 0.4, 0.6, 0.6, 0.6, 0.6, 0.7}, 9, -1, 2, false,1.0/i, true, 0.5);
+        for (int i = 3 ; i < 8 ; i++){
+            simulator.Simulate(50000, 5000, 0.5, new double[]{0.99, 0.99, 0.4, 0.4, 0.6, 0.6, 0.6, 0.6, 0.7}, 9, -1, 2, false,2./i, false, 0.5);
 
             try{ simulator.serverDataToCSV("./Traffic Experiment Groups/server_" + i);}
             catch(IOException e){ System.out.println("IOException"); }
@@ -117,15 +103,26 @@ public class Main {
 
             System.out.print(" . ");
         }
+
+        for (int i = 3 ; i < 8 ; i++){
+            simulator.Simulate(50000, 5000, 0.5, new double[]{0.99, 0.99, 0.4, 0.4, 0.6, 0.6, 0.6, 0.6, 0.7}, 9, -1, 2, false,2.0/i, true, 0.5);
+
+            try{ simulator.serverDataToCSV("./Traffic Experiment Groups/serverg_" + i);}
+            catch(IOException e){ System.out.println("IOException"); }
+
+            try{ simulator.jobDataToCSV("./Traffic Experiment Groups/jobsg_" + i);}
+            catch(IOException e){ System.out.println("IOException"); }
+
+            System.out.print(" . ");
+        }
         System.out.println();
-        System.out.println("Traffic Experiment Done");
+        System.out.println("Traffic Experiment Grouped Done");
         // =======================================================================================
 
-
-        // Run Meal Rating Experiment
+        // Run Meal Rating Experiment with Groups
         // =======================================================================================
 
-        // Make Meal Rating Experiment Folder for the Data
+        // Make Meal Rating Experiment Groups Folder for the Data
         f = new File("./Meal Rating Experiment Groups");
         f.mkdirs();
 
@@ -144,24 +141,9 @@ public class Main {
         System.out.println("Meal Rating Experiment Done");
         // =======================================================================================
 
-        // Run Shock Experiment
+
+        // Run Side Rating Experiment
         // =======================================================================================
-
-        // Make Traffic Experiment Folder for the Data
-
-        f = new File("./Shock Experiment Groups");
-        f.mkdirs();
-
-        // Shock & Random Preferences
-        simulator.Simulate(50000, 5000, 0.5, new double[]{0.99, 0.99, 0.4, 0.4, 0.6, 0.6, 0.6, 0.6, 0.7}, 9, -1, 2, true, 1.0/3.0, true, 0.5);
-        try{ simulator.serverDataToCSV("./Shock Experiment Groups/server_shock_r");}
-        catch(IOException e){ System.out.println("IOException"); }
-        try{ simulator.jobDataToCSV("./Shock Experiment Groups/jobs_shock_r");}
-        catch(IOException e){ System.out.println("IOException"); }
-
-        System.out.println("Shock Experiment Done");
-        // =======================================================================================
-
         // Make Side Rating Experiment Folder for the Data
         f = new File("./Side Rating Experiment");
         f.mkdirs();
@@ -182,7 +164,9 @@ public class Main {
 
         // =======================================================================================
 
-        // Make Side Rating Experiment Folder for the Data
+        // Run Portion Size Experiment
+        // =======================================================================================
+        // Make Portion Size Experiment Folder for the Data
         f = new File("./Portion Size Experiment");
         f.mkdirs();
 

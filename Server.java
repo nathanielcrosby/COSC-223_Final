@@ -65,10 +65,12 @@ public class Server {
 
         setCurrentJob(null);
 
+        //tracks items left
         if (index != 0 && index != 1) {
             itemsLeft--;
         }
 
+        //adds dummy job if there are no items left (dummy jobs are when food is restocked in the servers)
         if ((itemsLeft == 0) && (index != 0 && index != 1)){
             setCurrentJob(new Job(-1, itemsCapacity/300, servers, index, 0, 0, 0));
             nextDepartureTime = currTime + currentJob.getSizes(index);
