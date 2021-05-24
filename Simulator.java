@@ -1,9 +1,6 @@
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Random;
 import java.io.FileWriter;
-import java.io.IOException;
 
 
 public class Simulator {
@@ -67,12 +64,12 @@ public class Simulator {
         waitTimes = new ArrayList<Integer>();
         mealRatings = new ArrayList<Double>();
 
-        //number of arrivlas and departures
+        //number of arrivals and departures
         int[] arrivals = new int[size];
         int[] departures = new int[size];
         Server[] servers = new Server[size];
 
-        //create random shockpoint 50-70% into simulation.
+        //create random shock point 50-70% into simulation.
         int shockPoint;
         if(shock) {
             shockPoint = (int) ((0.5 + Math.random() * .2) * jobs);

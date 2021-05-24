@@ -1,4 +1,3 @@
-import java.util.AbstractQueue;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -16,12 +15,6 @@ public class Server {
     // Current Time
     private int currTime;
 
-    // Number of jobs in the system
-    private int numjobs = 0;
-
-    // ================== IDRK ==================
-    private int food;
-
     // Capacity of servings that this station can hold
     private int itemsCapacity;
 
@@ -34,6 +27,7 @@ public class Server {
     // The number of servers in the system
     private int servers;
 
+    // The amount of food a station gives to a job
     private double portionSize;
 
     public Server(int index,int servers,int capacity, double portionSize) {
@@ -44,10 +38,11 @@ public class Server {
         jobs = new LinkedList<Job>();
     }
 
-    // Add a job to this server
+    /**
+     * Adds a job to this server
+     * @param job job in the system: Job
+     */
     public void addJob(Job job) {
-
-        numjobs++;
         currTime = job.getArrivalTime();
         if(currentJob == null) {
             setCurrentJob(job);
@@ -57,9 +52,10 @@ public class Server {
         }
     }
 
-    // Handle the departure of a job from the server
+    /**
+     * Handles the departure of a job from the server
+     */
     public Job departure() {
-        numjobs--;
         currTime = nextDepartureTime;
         Job oldJob = currentJob;
 
@@ -86,23 +82,31 @@ public class Server {
         return oldJob;
     }
 
-    // Set this server's current job
+    /**
+     * Sets this server's current job
+     */
     public void setCurrentJob(Job job) {
         currentJob = job;
     }
 
-    // Set the capacity and items left of this server
+    /**
+     * Sets the capacity and items left of this server
+     */
     public void setItemsLeft(int left){
-        itemsCapacity = (int) ( left - (0.5 - portionSize)*left);
+        itemsCapacity = (int) (left - (0.5 - portionSize)*left);
         itemsLeft = itemsCapacity;
     }
 
-    // Grab the current job being serviced by this server
+    /**
+     * Grabs the current job being serviced by this server
+     */
     public Job getCurrentJob() {
         return currentJob;
     }
 
-    // Grab the number of jobs at the server right now
+    /**
+     * Grabs the current number of jobs at the server
+     */
     public int getNumJobs() {
         if(currentJob != null && currentJob.getStartTime() >= 0) {
             return jobs.size() + 1;
@@ -110,17 +114,16 @@ public class Server {
             return jobs.size();
     }
 
-    // Grab the departure time of the job in service
+    /**
+     * Grabs the departure time of the job currently in service
+     */
     public int getNextDepartureTime() {
         return nextDepartureTime;
     }
 
-    // ================== IDRK ==================
-    public int getFood() {
-        return food;
-    }
-
-    // Grab the index associated with this server in the larger system
+    /**
+     * Grabs the index associated with this server in the larger system
+     */
     public int getIndex() {
         return index;
     }

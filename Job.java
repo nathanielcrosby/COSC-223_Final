@@ -1,6 +1,4 @@
 import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.Queue;
 
 public class Job {
 
@@ -10,7 +8,7 @@ public class Job {
     // Time of Arrival at this station
     private int arrivalTime;
 
-    // ================== IDRK ==================
+    // Job sizes across the stations
     private int sizes[];
 
     // Departure time from this station
@@ -19,7 +17,7 @@ public class Job {
     // Number of stations this student has stopped at
     private int numStops = 0;
 
-    // The stations that this student has visited (Probably dont need numStops above)
+    // The stations that this student has visited
     public ArrayList<Integer> stops;
 
     // A measure of this student's patience for waiting in line
@@ -34,8 +32,8 @@ public class Job {
     // A measure of how good this student's experience at Val was (Meal & Wait time)
     private double mealRating;
 
+    // The amount of food a student receives at a particular station
     private double portionSize;
-
 
     public Job(int arrivalTime, int jobSize, int servers, int initIndex, int mealQuality, int sideQuality, double portionSize) {
         this.arrivalTime = arrivalTime;
@@ -97,53 +95,74 @@ public class Job {
         }
     }
 
-    // Grab this student's arrival time at this station
+    /**
+     * Grabs this student's arrival time at this station
+     */
     public int getArrivalTime() {
         return arrivalTime;
     }
 
-    // Set this student's arrival time at this station
+    /**
+     * Sets this student's arrival time at this station
+     */
     public void setArrivalTime(int time) {
         arrivalTime = time;
     }
 
-    // Grab this student's departure time at this station
+    /**
+     * Grabs this student's departure time at this station
+     */
     public int getDepartureTime() {
         return departureTime;
     }
 
-    // Set this student's departure time at this station
+    /**
+     * Sets this student's departure time at this station
+     */
     public void setDepartureTime(int departureTime) {
         this.departureTime = departureTime;
     }
 
-    // Grab this student's Wait Utility (measure of patience)
+    /**
+     * Grabs this student's Wait Utility (measure of patience)
+     */
     public double getWaitUtility(){
         return this.waitUtility;
     }
 
-    // Grab this student's Food Utility (measure of hunger)
+    /**
+    * Grabs this student's Food Utility (measure of hunger)
+     */
     public double getfoodUtility(){
         return this.foodUtility;
     }
 
-    // Grab the number of stations this student has stopped at
+    /**
+    * Grabs the number of stations this student has stopped at
+    */
     public int getNumStops() {
         return numStops;
     }
 
-    // Grab the time that this student arrived at Val
+    /**
+     * Grabs the time that this student arrived at Val
+     */
     public int getStartTime() {
         return startTime;
     }
 
-    // Grab the Meal Rating of this student's meal
+    /**
+     * Grabs the Meal Rating of this student's meal
+     */
     public double getMealRating(){
         return mealRating;
     }
 
-    // Decide which station to go to next (if any) by weighing each station's
-    // food options against the wait time and picking the best one
+    /**
+     * Decide which station to go to next (if any) by weighing each station's
+     * food options against the wait time and picking the best one
+     * @param servers list of stations: Server[]
+     */
     public int pickServer(Server[] servers){
 
         // Find the server with longest wait (for normalizing)
@@ -169,10 +188,8 @@ public class Job {
                 norm_waitTime = (10*(servers[i].getNumJobs()/maxWait));
             }
 
-            // Calculate Utilty of going to the ith station(1/2 Subject to Change)
+            // Calculate Utility of going to the ith station(1/2 Subject to Change)
             score = Math.pow(portionSize, numStops) * (foodUtility * preferences[i] - waitUtility * norm_waitTime);
-
-            //System.out.println(score);
 
             // Keep track of the best station and the score of that station
             if (score > highScore && !stops.contains(i)){
