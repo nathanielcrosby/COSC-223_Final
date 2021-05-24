@@ -3,6 +3,8 @@ Final Project for COSC-223
 
 Matthew Kaneb, David Dang, William DeGroot, and Nathaniel Crosby
 
+A queueing system simulation and analysis of Valentine Dining Hall.
+
 The simulation is broken into 4 java classes.
 
 Main():
