@@ -54,7 +54,7 @@ public class Main {
         // Run Shock Experiment
         // =======================================================================================
 
-        // Make Traffic Experiment Folder for the Data
+        // Make Shock Experiment Folder for the Data
         f = new File("./Shock Experiment");
         f.mkdirs();
 
@@ -137,9 +137,25 @@ public class Main {
             System.out.print(" . ");
         }
         System.out.println();
-        System.out.println("Meal Rating Experiment Done");
+        System.out.println("Meal Rating Group Experiment Done");
         // =======================================================================================
 
+        // Run Shock Experiment Grouped
+        // =======================================================================================
+
+        // Make Shock Experiment Groups Folder for the Data
+        f = new File("./Shock Experiment Groups");
+        f.mkdirs();
+
+        // Shock & Random Preferences
+        simulator.Simulate(50000, 5000, 0.5, new double[]{0.99, 0.99, 0.4, 0.4, 0.6, 0.6, 0.6, 0.6, 0.7}, 9, -1, 2,true,1.0/3.0, true, 0.5);
+        try{ simulator.serverDataToCSV("./Shock Experiment Groups/server_shock_r");}
+        catch(IOException e){ System.out.println("IOException"); }
+        try{ simulator.jobDataToCSV("./Shock Experiment Groups/jobs_shock_r");}
+        catch(IOException e){ System.out.println("IOException"); }
+
+        System.out.println("Shock Grouped Experiment Done");
+        // =======================================================================================
 
         // Run Side Rating Experiment
         // =======================================================================================

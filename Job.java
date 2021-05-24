@@ -56,7 +56,7 @@ public class Job {
         if (mealQuality < 0) {
             preferences = new double[servers];
             for(int i = 0; i<preferences.length; i++) {
-                preferences[i] = Math.random()*7;
+                preferences[i] = Math.random()*8;
             }
         } else {
             preferences = new double[servers];
